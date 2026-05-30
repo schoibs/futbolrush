@@ -5,8 +5,69 @@
 [node name="HUD" type="CanvasLayer" unique_id=506885416]
 script = ExtResource("1_ahhtf")
 
-[node name="Control" type="Control" parent="." unique_id=1703709686]
+[node name="Root" type="Control" parent="." unique_id=1703709686]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StartScreen" type="CenterContainer" parent="Root" unique_id=1465504337]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuBox" type="VBoxContainer" parent="Root/StartScreen" unique_id=2136171132]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Root/StartScreen/MenuBox" unique_id=1195029077]
+layout_mode = 2
+text = "FutbolRush"
+
+[node name="PlayButton" type="Button" parent="Root/StartScreen/MenuBox" unique_id=920738959]
+layout_mode = 2
+text = "Play"
+
+[node name="ScoreLabel" type="Label" parent="Root" unique_id=29282072]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Score: 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverScreen" type="CenterContainer" parent="Root" unique_id=648134393]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverBox" type="VBoxContainer" parent="Root/GameOverScreen" unique_id=886886245]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="Root/GameOverScreen/GameOverBox" unique_id=275617344]
+layout_mode = 2
+text = "Game Over"
+
+[node name="FinalScoreLabel" type="Label" parent="Root/GameOverScreen/GameOverBox" unique_id=155293888]
+layout_mode = 2
+text = "Final Score: 0"
+
+[node name="RestartButton" type="Button" parent="Root/GameOverScreen/GameOverBox" unique_id=585362463]
+layout_mode = 2
+text = "Restart"
+
+[connection signal="pressed" from="Root/StartScreen/MenuBox/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="Root/GameOverScreen/GameOverBox/RestartButton" to="." method="_on_restart_button_pressed"]
