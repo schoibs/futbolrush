@@ -16,5 +16,6 @@ script = ExtResource("1_0bbpv")
 [node name="ScoreTimer" type="Timer" parent="." unique_id=874616213]
 
 [node name="Player" parent="." unique_id=1297052640 instance=ExtResource("2_rarhs")]
+position = Vector2(360, 1060)
 
 [node name="HUD" parent="." unique_id=506885416 instance=ExtResource("3_vcsgt")]
