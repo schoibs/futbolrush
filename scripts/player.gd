@@ -9,6 +9,9 @@ signal died
 
 var velocity_x := 0.0
 
+func _ready() -> void:
+	add_to_group("player")
+
 func _physics_process(delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
 
