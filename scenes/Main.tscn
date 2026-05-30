@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://c3ioakxxdlrly"]
+
+[ext_resource type="Script" uid="uid://bcbopnul0ki3" path="res://scripts/main.gd" id="1_0bbpv"]
+[ext_resource type="PackedScene" uid="uid://cscf5bakdqsuk" path="res://scenes/Player.tscn" id="2_rarhs"]
+[ext_resource type="PackedScene" uid="uid://chcyw0xdtldhm" path="res://scenes/HUD.tscn" id="3_vcsgt"]
+
+[node name="Main" type="Node2D" unique_id=593698997]
+script = ExtResource("1_0bbpv")
+
+[node name="PitchBackground" type="Node2D" parent="." unique_id=778941993]
+
+[node name="DefenderContainer" type="Node2D" parent="." unique_id=1849115731]
+
+[node name="SpawnTimer" type="Timer" parent="." unique_id=183238481]
+
+[node name="ScoreTimer" type="Timer" parent="." unique_id=874616213]
+
+[node name="Player" parent="." unique_id=1297052640 instance=ExtResource("2_rarhs")]
+
+[node name="HUD" parent="." unique_id=506885416 instance=ExtResource("3_vcsgt")]
