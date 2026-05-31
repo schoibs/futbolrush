@@ -9,6 +9,7 @@ signal restart_pressed
 @onready var final_score_label: Label = $Root/GameOverScreen/GameOverBox/FinalScoreLabel
 @onready var play_button: Button = $Root/StartScreen/MenuBox/PlayButton
 @onready var restart_button: Button = $Root/GameOverScreen/GameOverBox/RestartButton
+@onready var impact_flash: ColorRect = $Root/ImpactFlash
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_button_pressed)
@@ -33,6 +34,14 @@ func show_game_over(final_score: int) -> void:
 
 func set_score(score: int) -> void:
 	score_label.text = "Score: %d" % score
+
+func play_impact_feedback() -> void:
+	impact_flash.visible = true
+	impact_flash.modulate.a = 0.65
+
+	var tween := create_tween()
+	tween.tween_property(impact_flash, "modulate:a", 0.0, 0.18)
+	tween.finished.connect(func(): impact_flash.visible = false)
 
 func _on_play_button_pressed() -> void:
 	play_pressed.emit()

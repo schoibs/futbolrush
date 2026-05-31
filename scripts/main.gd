@@ -82,6 +82,7 @@ func enter_game_over_state() -> void:
 	spawn_timer.stop()
 	score_timer.stop()
 	player.set_physics_process(false)
+	hud.play_impact_feedback()
 	clear_defenders()
 	hud.show_game_over(score)
 
