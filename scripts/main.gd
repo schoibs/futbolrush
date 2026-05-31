@@ -2,6 +2,16 @@ extends Node2D
 
 enum GameState { START, PLAYING, GAME_OVER }
 
+@export_group("Difficulty")
+@export var intro_spawn_interval := 1.20
+@export var mid_spawn_interval := 0.85
+@export var late_spawn_interval := 0.55
+@export var intro_speed_range := Vector2(260.0, 320.0)
+@export var mid_speed_range := Vector2(330.0, 430.0)
+@export var late_speed_range := Vector2(430.0, 560.0)
+@export var intro_grace_seconds := 10
+@export var safe_intro_gap := 140.0
+
 @export var defender_scene: PackedScene
 @export var defender_speed := 300.0
 @export var defender_half_width := 30.0
@@ -19,6 +29,7 @@ var player_start_position := Vector2.ZERO
 
 func _ready() -> void:
 	randomize()
+	spawn_timer.one_shot = true
 	player_start_position = player.position
 
 	if not spawn_timer.timeout.is_connected(_on_spawn_timer_timeout):
@@ -52,8 +63,12 @@ func start_run() -> void:
 	reset_player()
 	player.set_physics_process(true)
 	hud.show_playing(score)
-	spawn_timer.start()
+	start_spawn_timer()
 	score_timer.start()
+
+func start_spawn_timer() -> void:
+	spawn_timer.wait_time = get_current_spawn_interval()
+	spawn_timer.start()
 
 func enter_game_over_state() -> void:
 	if game_state == GameState.GAME_OVER:
@@ -75,20 +90,54 @@ func clear_defenders() -> void:
 
 func spawn_defender() -> void:
 	var defender = defender_scene.instantiate()
-	defender.speed = defender_speed
-
+	defender.speed = get_current_defender_speed()
+	
 	var viewport_width := get_viewport_rect().size.x
-	var spawn_x := randf_range(defender_half_width, viewport_width - defender_half_width)
+	var spawn_x := get_spawn_x()
 	defender.position = Vector2(spawn_x, defender_start_y)
 
 	defender.hit_player.connect(_on_defender_hit_player)
 	defender_container.add_child(defender)
+
+func get_current_spawn_interval() -> float:
+	if score < 20:
+		return intro_spawn_interval
+	if score < 45:
+		return mid_spawn_interval
+	return late_spawn_interval
+
+func get_current_speed_range() -> Vector2:
+	if score < 20:
+		return intro_speed_range
+	if score < 45:
+		return mid_speed_range
+	return late_speed_range
+
+func get_current_defender_speed() -> float:
+	var speed_range := get_current_speed_range()
+	return randf_range(speed_range.x, speed_range.y)
+
+func get_spawn_x() -> float:
+	var viewport_width := get_viewport_rect().size.x
+	var min_x := defender_half_width
+	var max_x := viewport_width - defender_half_width
+
+	for attempt in range(8):
+#		try up to 8 random positions and use first one that seems fair
+		var candidate := randf_range(min_x, max_x)
+		var far_enough_from_player := absf(candidate - player.position.x) >= safe_intro_gap
+
+		if score >= intro_grace_seconds or far_enough_from_player:
+			return candidate
+
+	return randf_range(min_x, max_x)
 
 func _on_spawn_timer_timeout() -> void:
 	if game_state != GameState.PLAYING:
 		return
 
 	spawn_defender()
+	start_spawn_timer()
 
 func _on_score_timer_timeout() -> void:
 	if game_state != GameState.PLAYING:
