@@ -17,6 +17,10 @@ enum GameState { START, PLAYING, GAME_OVER }
 @export var defender_half_width := 30.0
 @export var defender_start_y := -50.0
 
+@export var sprinter_defender_scene: PackedScene
+@export var sprinter_chance := 0.20
+@export var sprinter_speed_bonus := 120.0
+
 @onready var defender_container: Node2D = $DefenderContainer
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var score_timer: Timer = $ScoreTimer
@@ -89,8 +93,12 @@ func clear_defenders() -> void:
 		defender.queue_free()
 
 func spawn_defender() -> void:
-	var defender = defender_scene.instantiate()
+	var chosen_scene := choose_defender_scene()
+	var defender = chosen_scene.instantiate()
 	defender.speed = get_current_defender_speed()
+	
+	if chosen_scene == sprinter_defender_scene:
+		defender.speed += sprinter_speed_bonus
 	
 	var viewport_width := get_viewport_rect().size.x
 	var spawn_x := get_spawn_x()
@@ -131,6 +139,12 @@ func get_spawn_x() -> float:
 			return candidate
 
 	return randf_range(min_x, max_x)
+
+func choose_defender_scene() -> PackedScene:
+	if score >= 20 and sprinter_defender_scene != null and randf() < sprinter_chance:
+		return sprinter_defender_scene
+
+	return defender_scene
 
 func _on_spawn_timer_timeout() -> void:
 	if game_state != GameState.PLAYING:

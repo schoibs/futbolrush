@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bq1tstr1lwvd7"]
+
+[ext_resource type="Script" uid="uid://v5kwvuf0ujmi" path="res://scripts/defender.gd" id="1_jvgi0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r2g7j"]
+size = Vector2(52, 68)
+
+[node name="Defender" type="Area2D" unique_id=677360749]
+script = ExtResource("1_jvgi0")
+
+[node name="BodyVisual" type="Polygon2D" parent="." unique_id=986199211]
+color = Color(0.87538564, 0.93117917, 0.098893695, 1)
+polygon = PackedVector2Array(-30, -38, 30, -38, 30, 38, -30, 38)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1089553341]
+shape = SubResource("RectangleShape2D_r2g7j")

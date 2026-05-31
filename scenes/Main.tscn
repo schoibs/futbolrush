@@ -3,11 +3,13 @@
 [ext_resource type="Script" uid="uid://bcbopnul0ki3" path="res://scripts/main.gd" id="1_0bbpv"]
 [ext_resource type="PackedScene" uid="uid://cscf5bakdqsuk" path="res://scenes/Player.tscn" id="2_rarhs"]
 [ext_resource type="PackedScene" uid="uid://7rldpgul5fa7" path="res://scenes/Defender.tscn" id="2_vcsgt"]
+[ext_resource type="PackedScene" uid="uid://bq1tstr1lwvd7" path="res://scenes/DefenderSprinter.tscn" id="3_c01mt"]
 [ext_resource type="PackedScene" uid="uid://chcyw0xdtldhm" path="res://scenes/HUD.tscn" id="3_vcsgt"]
 
 [node name="Main" type="Node2D" unique_id=593698997]
 script = ExtResource("1_0bbpv")
 defender_scene = ExtResource("2_vcsgt")
+sprinter_defender_scene = ExtResource("3_c01mt")
 
 [node name="PitchBackground" type="Node2D" parent="." unique_id=778941993]
 
