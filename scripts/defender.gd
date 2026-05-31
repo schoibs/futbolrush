@@ -5,8 +5,13 @@ signal hit_player
 @export var speed := 300.0
 @export var half_height := 38.0
 
+@onready var run_animation: AnimatedSprite2D = $RunAnimation
+
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
+	
+	if run_animation.sprite_frames != null and run_animation.sprite_frames.has_animation("run"):
+		run_animation.play("run")
 
 func _physics_process(delta: float) -> void:
 	position.y += speed * delta

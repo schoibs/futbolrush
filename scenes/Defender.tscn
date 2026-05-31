@@ -1,16 +1,42 @@
 [gd_scene format=3 uid="uid://7rldpgul5fa7"]
 
 [ext_resource type="Script" uid="uid://v5kwvuf0ujmi" path="res://scripts/defender.gd" id="1_r2g7j"]
+[ext_resource type="Texture2D" uid="uid://fcl41pq18stu" path="res://art/sprites/defender_1.png" id="2_p6ck8"]
+[ext_resource type="Texture2D" uid="uid://xs8ktc42kiog" path="res://art/sprites/defender_2.png" id="3_ioame"]
+[ext_resource type="Texture2D" uid="uid://bhg438swwiyfj" path="res://art/sprites/defender_3.png" id="4_ioame"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r2g7j"]
 size = Vector2(52, 68)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ovm2w"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_p6ck8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_ioame")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ioame")
+}],
+"loop": true,
+"name": &"run",
+"speed": 5.0
+}]
 
 [node name="Defender" type="Area2D" unique_id=677360749]
 script = ExtResource("1_r2g7j")
 
 [node name="BodyVisual" type="Polygon2D" parent="." unique_id=986199211]
+visible = false
 color = Color(0.08235294, 1, 1, 1)
 polygon = PackedVector2Array(-30, -38, 30, -38, 30, 38, -30, 38)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1089553341]
 shape = SubResource("RectangleShape2D_r2g7j")
+
+[node name="RunAnimation" type="AnimatedSprite2D" parent="." unique_id=5084423]
+scale = Vector2(0.35, 0.35)
+sprite_frames = SubResource("SpriteFrames_ovm2w")
+animation = &"run"

@@ -3,3 +3,5 @@ scratchpad/
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+.DS_STORE

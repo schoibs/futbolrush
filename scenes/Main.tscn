@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://7rldpgul5fa7" path="res://scenes/Defender.tscn" id="2_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://bq1tstr1lwvd7" path="res://scenes/DefenderSprinter.tscn" id="3_c01mt"]
 [ext_resource type="PackedScene" uid="uid://chcyw0xdtldhm" path="res://scenes/HUD.tscn" id="3_vcsgt"]
+[ext_resource type="Script" uid="uid://h3vy02yhsy1k" path="res://scripts/pitch_background.gd" id="4_c01mt"]
+[ext_resource type="Texture2D" uid="uid://dkdybv5x0sa6u" path="res://art/sprites/pitch.png" id="5_nxtc6"]
 
 [node name="Main" type="Node2D" unique_id=593698997]
 script = ExtResource("1_0bbpv")
@@ -12,6 +14,10 @@ defender_scene = ExtResource("2_vcsgt")
 sprinter_defender_scene = ExtResource("3_c01mt")
 
 [node name="PitchBackground" type="Node2D" parent="." unique_id=778941993]
+script = ExtResource("4_c01mt")
+
+[node name="PitchSprite" type="Sprite2D" parent="PitchBackground" unique_id=182517325]
+texture = ExtResource("5_nxtc6")
 
 [node name="DefenderContainer" type="Node2D" parent="." unique_id=1849115731]
 

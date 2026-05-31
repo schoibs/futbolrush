@@ -7,10 +7,15 @@ signal died
 @export var friction := 2200.0
 @export var half_width := 28.0
 
+@onready var player_animation: AnimatedSprite2D = $PlayerAnimation
+
 var velocity_x := 0.0
 
 func _ready() -> void:
 	add_to_group("player")
+	
+	if player_animation.sprite_frames != null and player_animation.sprite_frames.has_animation("dribble"):
+		player_animation.play("dribble")
 
 func _physics_process(delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
