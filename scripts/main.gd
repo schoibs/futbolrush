@@ -27,14 +27,23 @@ enum GameState { START, PLAYING, GAME_OVER }
 @onready var player: Area2D = $Player
 @onready var hud = $HUD
 
+#user:// is Godot's writable local data path for the current user
+const SAVE_PATH := "user://futbolrush.cfg"
+const SAVE_SECTION := "scores"
+const SAVE_BEST_SCORE := "best_score"
+
 var game_state := GameState.START
-var score := 0
 var player_start_position := Vector2.ZERO
+var score := 0
+var best_score := 0
 
 func _ready() -> void:
 	randomize()
 	spawn_timer.one_shot = true
 	player_start_position = player.position
+	
+	load_best_score()
+	
 
 	if not spawn_timer.timeout.is_connected(_on_spawn_timer_timeout):
 		spawn_timer.timeout.connect(_on_spawn_timer_timeout)
@@ -58,7 +67,7 @@ func enter_start_state() -> void:
 	clear_defenders()
 	reset_player()
 	player.set_physics_process(false)
-	hud.show_start()
+	hud.show_start(best_score)
 
 func start_run() -> void:
 	game_state = GameState.PLAYING
@@ -84,7 +93,8 @@ func enter_game_over_state() -> void:
 	player.set_physics_process(false)
 	hud.play_collision_feedback()
 	clear_defenders()
-	hud.show_game_over(score)
+	update_best_score()
+	hud.show_game_over(score, best_score)
 
 func reset_player() -> void:
 	player.position = player_start_position
@@ -146,6 +156,32 @@ func choose_defender_scene() -> PackedScene:
 		return sprinter_defender_scene
 
 	return defender_scene
+
+func load_best_score() -> void:
+	var config := ConfigFile.new()
+	var err := config.load(SAVE_PATH)
+
+	if err == OK:
+		best_score = int(config.get_value(SAVE_SECTION, SAVE_BEST_SCORE, 0))
+	else:
+		best_score = 0
+
+func save_best_score() -> void:
+#	Save best score locally
+	var config := ConfigFile.new()
+	config.set_value(SAVE_SECTION, SAVE_BEST_SCORE, best_score)
+
+	var err := config.save(SAVE_PATH)
+	if err != OK:
+		push_warning("Could not save best score: %s" % err)
+
+func update_best_score() -> void:
+	if score <= best_score:
+		return
+
+	best_score = score
+	save_best_score()
+
 
 func _on_spawn_timer_timeout() -> void:
 	if game_state != GameState.PLAYING:

@@ -12,15 +12,20 @@ signal restart_pressed
 @onready var impact_flash: ColorRect = $Root/ImpactFlash
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var collision_sound: AudioStreamPlayer = $CollisionSound
+@onready var start_best_score_label: Label = $Root/StartScreen/MenuBox/BestScoreLabel
+@onready var game_over_best_score_label: Label = $Root/GameOverScreen/GameOverBox/GameOverBestScoreLabel
+
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_button_pressed)
 	restart_button.pressed.connect(_on_restart_button_pressed)
 
-func show_start() -> void:
+func show_start(best_score: int = 0) -> void:
 	start_screen.visible = true
 	score_label.visible = false
 	game_over_screen.visible = false
+	start_best_score_label.text = "Best: %d" % best_score
+	start_best_score_label.visible = best_score > 0
 
 func show_playing(score: int) -> void:
 	start_screen.visible = false
@@ -28,11 +33,12 @@ func show_playing(score: int) -> void:
 	game_over_screen.visible = false
 	set_score(score)
 
-func show_game_over(final_score: int) -> void:
+func show_game_over(final_score: int, best_score: int = 0) -> void:
 	start_screen.visible = false
 	score_label.visible = false
 	game_over_screen.visible = true
 	final_score_label.text = "Final Score: %d" % final_score
+	game_over_best_score_label.text = "Best: %d" % best_score
 
 func set_score(score: int) -> void:
 	score_label.text = "Score: %d" % score

@@ -35,6 +35,12 @@ theme_override_fonts/font = ExtResource("2_fls4u")
 theme_override_font_sizes/font_size = 64
 text = "FutbolRush"
 
+[node name="BestScoreLabel" type="Label" parent="Root/StartScreen/MenuBox" unique_id=1743521048]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_fls4u")
+theme_override_font_sizes/font_size = 28
+text = "Best: 0"
+
 [node name="PlayButton" type="Button" parent="Root/StartScreen/MenuBox" unique_id=920738959]
 layout_mode = 2
 text = "Play"
@@ -76,6 +82,11 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("2_fls4u")
 theme_override_font_sizes/font_size = 32
 text = "Final Score: 0"
+
+[node name="GameOverBestScoreLabel" type="Label" parent="Root/GameOverScreen/GameOverBox" unique_id=954596739]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_fls4u")
+theme_override_font_sizes/font_size = 32
 
 [node name="RestartButton" type="Button" parent="Root/GameOverScreen/GameOverBox" unique_id=585362463]
 layout_mode = 2
