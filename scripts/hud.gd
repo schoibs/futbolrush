@@ -10,6 +10,8 @@ signal restart_pressed
 @onready var play_button: Button = $Root/StartScreen/MenuBox/PlayButton
 @onready var restart_button: Button = $Root/GameOverScreen/GameOverBox/RestartButton
 @onready var impact_flash: ColorRect = $Root/ImpactFlash
+@onready var button_sound: AudioStreamPlayer = $ButtonSound
+@onready var collision_sound: AudioStreamPlayer = $CollisionSound
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_button_pressed)
@@ -44,7 +46,19 @@ func play_impact_feedback() -> void:
 	tween.finished.connect(func(): impact_flash.visible = false)
 
 func _on_play_button_pressed() -> void:
+	play_button_sound()
 	play_pressed.emit()
 
 func _on_restart_button_pressed() -> void:
+	play_button_sound()
 	restart_pressed.emit()
+	
+func play_button_sound() -> void:
+	if button_sound.stream != null:
+		button_sound.play()
+
+func play_collision_feedback() -> void:
+	if collision_sound.stream != null:
+		collision_sound.play()
+
+	play_impact_feedback()

@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cni8xps6yc45" path="res://scripts/hud.gd" id="1_ahhtf"]
 [ext_resource type="FontFile" uid="uid://b73rb5ujtx4ms" path="res://art/fonts/Matcha Cih.ttf" id="2_fls4u"]
+[ext_resource type="AudioStream" uid="uid://b5i43c2ar5tqs" path="res://art/audio/flute.wav" id="3_7hsmw"]
+[ext_resource type="AudioStream" uid="uid://byn4covxn1bsd" path="res://art/audio/collision.wav" id="4_nysna"]
 
 [node name="HUD" type="CanvasLayer" unique_id=506885416]
 script = ExtResource("1_ahhtf")
@@ -88,6 +90,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=578936398]
+stream = ExtResource("3_7hsmw")
+
+[node name="CollisionSound" type="AudioStreamPlayer" parent="." unique_id=1150748653]
+stream = ExtResource("4_nysna")
 
 [connection signal="pressed" from="Root/StartScreen/MenuBox/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="Root/GameOverScreen/GameOverBox/RestartButton" to="." method="_on_restart_button_pressed"]
