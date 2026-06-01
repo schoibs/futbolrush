@@ -20,7 +20,9 @@ enum GameState { START, PLAYING, GAME_OVER }
 @export var sprinter_defender_scene: PackedScene
 @export var sprinter_chance := 0.20
 @export var sprinter_speed_bonus := 120.0
+@export var goal_y := 45.0
 
+@onready var goal = $Goal
 @onready var defender_container: Node2D = $DefenderContainer
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var score_timer: Timer = $ScoreTimer
@@ -42,6 +44,7 @@ func _ready() -> void:
 	spawn_timer.one_shot = true
 	player_start_position = player.position
 	
+	position_goal()
 	load_best_score()
 	
 
@@ -56,6 +59,9 @@ func _ready() -> void:
 
 	if not hud.restart_pressed.is_connected(_on_hud_restart_pressed):
 		hud.restart_pressed.connect(_on_hud_restart_pressed)
+		
+	if not goal.ball_entered.is_connected(_on_goal_ball_entered):
+		goal.ball_entered.connect(_on_goal_ball_entered)
 
 	enter_start_state()
 
@@ -77,7 +83,6 @@ func start_run() -> void:
 	player.set_physics_process(true)
 	hud.show_playing(score)
 	start_spawn_timer()
-	score_timer.start()
 
 func start_spawn_timer() -> void:
 	spawn_timer.wait_time = get_current_spawn_interval()
@@ -182,6 +187,18 @@ func update_best_score() -> void:
 	best_score = score
 	save_best_score()
 
+func position_goal() -> void:
+#	always keep the goal centered
+	var viewport_width := get_viewport_rect().size.x
+#	goal's x position is always half of whatever the screen width
+	goal.position = Vector2(viewport_width * 0.5, goal_y)
+
+func score_goal() -> void:
+	if game_state != GameState.PLAYING:
+		return
+
+	score += 1
+	hud.set_score(score)
 
 func _on_spawn_timer_timeout() -> void:
 	if game_state != GameState.PLAYING:
@@ -191,11 +208,20 @@ func _on_spawn_timer_timeout() -> void:
 	start_spawn_timer()
 
 func _on_score_timer_timeout() -> void:
+	pass
+
+func _on_goal_ball_entered(ball: Area2D) -> void:
 	if game_state != GameState.PLAYING:
 		return
 
-	score += 1
-	hud.set_score(score)
+	# The null case exists only for the temporary debug trigger in this milestone.
+	if ball != null:
+		if not ball.has_method("is_in_flight"):
+			return
+		if not ball.is_in_flight():
+			return
+
+	score_goal()
 
 func _on_defender_hit_player() -> void:
 	enter_game_over_state()
@@ -205,3 +231,11 @@ func _on_hud_play_pressed() -> void:
 
 func _on_hud_restart_pressed() -> void:
 	start_run()
+	
+func _unhandled_input(event: InputEvent) -> void:
+#	TODO: temp handler for debugging goal event
+	if game_state != GameState.PLAYING:
+		return
+
+	if event.is_action_pressed("debug_goal"):
+		_on_goal_ball_entered(null)

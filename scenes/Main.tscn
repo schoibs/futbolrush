@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://chcyw0xdtldhm" path="res://scenes/HUD.tscn" id="3_vcsgt"]
 [ext_resource type="Script" uid="uid://h3vy02yhsy1k" path="res://scripts/pitch_background.gd" id="4_c01mt"]
 [ext_resource type="Texture2D" uid="uid://dkdybv5x0sa6u" path="res://art/sprites/pitch.png" id="5_nxtc6"]
+[ext_resource type="PackedScene" uid="uid://c5y7s4ymcwtu4" path="res://scenes/Goal.tscn" id="8_jlsqs"]
 
 [node name="Main" type="Node2D" unique_id=593698997]
 script = ExtResource("1_0bbpv")
@@ -18,6 +19,9 @@ script = ExtResource("4_c01mt")
 
 [node name="PitchSprite" type="Sprite2D" parent="PitchBackground" unique_id=182517325]
 texture = ExtResource("5_nxtc6")
+
+[node name="Goal" parent="." unique_id=2038109294 instance=ExtResource("8_jlsqs")]
+position = Vector2(360, 45)
 
 [node name="DefenderContainer" type="Node2D" parent="." unique_id=1849115731]
 
