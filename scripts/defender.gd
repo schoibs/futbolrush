@@ -8,6 +8,7 @@ signal hit_player
 @onready var run_animation: AnimatedSprite2D = $RunAnimation
 
 func _ready() -> void:
+	add_to_group("defender")
 	area_entered.connect(_on_area_entered)
 	
 	if run_animation.sprite_frames != null and run_animation.sprite_frames.has_animation("run"):

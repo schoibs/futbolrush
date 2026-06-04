@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://c5y7s4ymcwtu4"]
+
+[ext_resource type="Script" uid="uid://smklyotxo15l" path="res://scripts/goal.gd" id="1_grq7m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_grq7m"]
+size = Vector2(220, 70)
+
+[node name="Goal" type="Area2D" unique_id=2038109294]
+script = ExtResource("1_grq7m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=271426588]
+shape = SubResource("RectangleShape2D_grq7m")
+
+[node name="GoalVisual" type="Node2D" parent="." unique_id=1086977669]
+
+[node name="Crossbar" type="Line2D" parent="GoalVisual" unique_id=709601029]
+points = PackedVector2Array(-110, -35, 110, -35)
+width = 8.0
+
+[node name="LeftPost" type="Line2D" parent="GoalVisual" unique_id=1194007999]
+points = PackedVector2Array(-110, -35, -110, 35)
+width = 8.0
+
+[node name="RightPost" type="Line2D" parent="GoalVisual" unique_id=1129058972]
+points = PackedVector2Array(110, -35, 110, 35)
+width = 8.0

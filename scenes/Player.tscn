@@ -36,3 +36,16 @@ shape = SubResource("RectangleShape2D_p0vlq")
 scale = Vector2(0.35, 0.35)
 sprite_frames = SubResource("SpriteFrames_qu4a1")
 animation = &"dribble"
+
+[node name="AimIndicator" type="Node2D" parent="." unique_id=203279983]
+position = Vector2(0, -58)
+
+[node name="AimLine" type="Line2D" parent="AimIndicator" unique_id=1630641442]
+points = PackedVector2Array(0, 0, 0, -95)
+width = 5.0
+default_color = Color(1, 1, 0, 1)
+
+[node name="AimArrowHead" type="Polygon2D" parent="AimIndicator" unique_id=681090914]
+color = Color(1, 1, 0, 1)
+offset = Vector2(0, -95)
+polygon = PackedVector2Array(0, -14, -9, 7, 9, 7)
