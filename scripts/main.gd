@@ -28,6 +28,7 @@ enum GameState { START, PLAYING, GAME_OVER }
 @onready var score_timer: Timer = $ScoreTimer
 @onready var player: Area2D = $Player
 @onready var hud = $HUD
+@onready var ball = $Ball
 
 #user:// is Godot's writable local data path for the current user
 const SAVE_PATH := "user://futbolrush.cfg"
@@ -43,11 +44,11 @@ func _ready() -> void:
 	randomize()
 	spawn_timer.one_shot = true
 	player_start_position = player.position
+	ball.setup(player)
 	
 	position_goal()
 	load_best_score()
 	
-
 	if not spawn_timer.timeout.is_connected(_on_spawn_timer_timeout):
 		spawn_timer.timeout.connect(_on_spawn_timer_timeout)
 
@@ -72,6 +73,7 @@ func enter_start_state() -> void:
 	score_timer.stop()
 	clear_defenders()
 	reset_player()
+	ball.reset_to_ready()
 	player.set_physics_process(false)
 	hud.show_start(best_score)
 
@@ -80,6 +82,7 @@ func start_run() -> void:
 	score = 0
 	clear_defenders()
 	reset_player()
+	ball.reset_to_ready()
 	player.set_physics_process(true)
 	hud.show_playing(score)
 	start_spawn_timer()
@@ -96,6 +99,7 @@ func enter_game_over_state() -> void:
 	spawn_timer.stop()
 	score_timer.stop()
 	player.set_physics_process(false)
+	ball.reset_to_ready()
 	hud.play_collision_feedback()
 	clear_defenders()
 	update_best_score()
@@ -210,18 +214,20 @@ func _on_spawn_timer_timeout() -> void:
 func _on_score_timer_timeout() -> void:
 	pass
 
-func _on_goal_ball_entered(ball: Area2D) -> void:
+func _on_goal_ball_entered(ball_area: Area2D) -> void:
 	if game_state != GameState.PLAYING:
 		return
 
-	# The null case exists only for the temporary debug trigger in this milestone.
-	if ball != null:
-		if not ball.has_method("is_in_flight"):
-			return
-		if not ball.is_in_flight():
-			return
+	if not ball_area.has_method("is_in_flight"):
+		return
+
+	if not ball_area.is_in_flight():
+		return
 
 	score_goal()
+
+	if ball_area.has_method("handle_goal"):
+		ball_area.handle_goal()
 
 func _on_defender_hit_player() -> void:
 	enter_game_over_state()
@@ -236,6 +242,6 @@ func _unhandled_input(event: InputEvent) -> void:
 #	TODO: temp handler for debugging goal event
 	if game_state != GameState.PLAYING:
 		return
-
-	if event.is_action_pressed("debug_goal"):
-		_on_goal_ball_entered(null)
+		
+	if event.is_action_pressed("debug_launch_ball"):
+		ball.launch(Vector2.UP)

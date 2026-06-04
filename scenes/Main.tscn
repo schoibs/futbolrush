@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bq1tstr1lwvd7" path="res://scenes/DefenderSprinter.tscn" id="3_c01mt"]
 [ext_resource type="PackedScene" uid="uid://chcyw0xdtldhm" path="res://scenes/HUD.tscn" id="3_vcsgt"]
 [ext_resource type="Script" uid="uid://h3vy02yhsy1k" path="res://scripts/pitch_background.gd" id="4_c01mt"]
+[ext_resource type="PackedScene" uid="uid://d2swqwgbyjgtf" path="res://scenes/Ball.tscn" id="4_nxtc6"]
 [ext_resource type="Texture2D" uid="uid://dkdybv5x0sa6u" path="res://art/sprites/pitch.png" id="5_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://c5y7s4ymcwtu4" path="res://scenes/Goal.tscn" id="8_jlsqs"]
 
@@ -24,6 +25,8 @@ texture = ExtResource("5_nxtc6")
 position = Vector2(360, 45)
 
 [node name="DefenderContainer" type="Node2D" parent="." unique_id=1849115731]
+
+[node name="Ball" parent="." unique_id=170385954 instance=ExtResource("4_nxtc6")]
 
 [node name="SpawnTimer" type="Timer" parent="." unique_id=183238481]
 wait_time = 1.2
