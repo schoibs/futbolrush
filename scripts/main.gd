@@ -9,7 +9,7 @@ enum GameState { START, PLAYING, GAME_OVER }
 @export var intro_speed_range := Vector2(260.0, 320.0)
 @export var mid_speed_range := Vector2(330.0, 430.0)
 @export var late_speed_range := Vector2(430.0, 560.0)
-@export var intro_grace_seconds := 10
+@export var intro_grace_seconds := 10.0
 @export var safe_intro_gap := 140.0
 
 @export var defender_scene: PackedScene
@@ -34,11 +34,14 @@ enum GameState { START, PLAYING, GAME_OVER }
 const SAVE_PATH := "user://futbolrush.cfg"
 const SAVE_SECTION := "scores"
 const SAVE_BEST_SCORE := "best_score"
+const MID_DIFFICULTY_SECONDS := 20.0
+const LATE_DIFFICULTY_SECONDS := 45.0
 
 var game_state := GameState.START
 var player_start_position := Vector2.ZERO
 var score := 0
 var best_score := 0
+var elapsed_time := 0.0
 
 func _ready() -> void:
 	randomize()
@@ -69,9 +72,16 @@ func _ready() -> void:
 
 	enter_start_state()
 
+func _process(delta: float) -> void:
+	if game_state != GameState.PLAYING:
+		return
+
+	elapsed_time += delta
+
 func enter_start_state() -> void:
 	game_state = GameState.START
 	score = 0
+	elapsed_time = 0.0
 	spawn_timer.stop()
 	score_timer.stop()
 	clear_defenders()
@@ -85,6 +95,7 @@ func enter_start_state() -> void:
 func start_run() -> void:
 	game_state = GameState.PLAYING
 	score = 0
+	elapsed_time = 0.0
 	clear_defenders()
 	reset_player()
 	ball.reset_to_ready()
@@ -136,16 +147,16 @@ func spawn_defender() -> void:
 	defender_container.add_child(defender)
 
 func get_current_spawn_interval() -> float:
-	if score < 20:
+	if elapsed_time < MID_DIFFICULTY_SECONDS:
 		return intro_spawn_interval
-	if score < 45:
+	if elapsed_time < LATE_DIFFICULTY_SECONDS:
 		return mid_spawn_interval
 	return late_spawn_interval
 
 func get_current_speed_range() -> Vector2:
-	if score < 20:
+	if elapsed_time < MID_DIFFICULTY_SECONDS:
 		return intro_speed_range
-	if score < 45:
+	if elapsed_time < LATE_DIFFICULTY_SECONDS:
 		return mid_speed_range
 	return late_speed_range
 
@@ -163,13 +174,13 @@ func get_spawn_x() -> float:
 		var candidate := randf_range(min_x, max_x)
 		var far_enough_from_player := absf(candidate - player.position.x) >= safe_intro_gap
 
-		if score >= intro_grace_seconds or far_enough_from_player:
+		if elapsed_time >= intro_grace_seconds or far_enough_from_player:
 			return candidate
 
 	return randf_range(min_x, max_x)
 
 func choose_defender_scene() -> PackedScene:
-	if score >= 20 and sprinter_defender_scene != null and randf() < sprinter_chance:
+	if elapsed_time >= MID_DIFFICULTY_SECONDS and sprinter_defender_scene != null and randf() < sprinter_chance:
 		return sprinter_defender_scene
 
 	return defender_scene
