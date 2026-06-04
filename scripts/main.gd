@@ -25,7 +25,6 @@ enum GameState { START, PLAYING, GAME_OVER }
 @onready var goal = $Goal
 @onready var defender_container: Node2D = $DefenderContainer
 @onready var spawn_timer: Timer = $SpawnTimer
-@onready var score_timer: Timer = $ScoreTimer
 @onready var player = $Player
 @onready var hud = $HUD
 @onready var ball = $Ball
@@ -55,9 +54,6 @@ func _ready() -> void:
 	if not spawn_timer.timeout.is_connected(_on_spawn_timer_timeout):
 		spawn_timer.timeout.connect(_on_spawn_timer_timeout)
 
-	if not score_timer.timeout.is_connected(_on_score_timer_timeout):
-		score_timer.timeout.connect(_on_score_timer_timeout)
-
 	if not hud.play_pressed.is_connected(_on_hud_play_pressed):
 		hud.play_pressed.connect(_on_hud_play_pressed)
 
@@ -83,7 +79,6 @@ func enter_start_state() -> void:
 	score = 0
 	elapsed_time = 0.0
 	spawn_timer.stop()
-	score_timer.stop()
 	clear_defenders()
 	reset_player()
 	ball.reset_to_ready()
@@ -115,7 +110,6 @@ func enter_game_over_state() -> void:
 
 	game_state = GameState.GAME_OVER
 	spawn_timer.stop()
-	score_timer.stop()
 	player.set_physics_process(false)
 	player.set_aim_active(false)
 	ball.reset_to_ready()
@@ -229,9 +223,6 @@ func _on_spawn_timer_timeout() -> void:
 
 	spawn_defender()
 	start_spawn_timer()
-
-func _on_score_timer_timeout() -> void:
-	pass
 
 func _on_goal_ball_entered(ball_area: Area2D) -> void:
 	if game_state != GameState.PLAYING:

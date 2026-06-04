@@ -31,14 +31,11 @@ position = Vector2(360, 45)
 [node name="SpawnTimer" type="Timer" parent="." unique_id=183238481]
 wait_time = 1.2
 
-[node name="ScoreTimer" type="Timer" parent="." unique_id=874616213]
-
 [node name="Player" parent="." unique_id=1297052640 instance=ExtResource("2_rarhs")]
 position = Vector2(360, 1060)
 
 [node name="HUD" parent="." unique_id=506885416 instance=ExtResource("3_vcsgt")]
 
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
-[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
 [connection signal="play_pressed" from="HUD" to="." method="_on_hud_play_pressed"]
 [connection signal="restart_pressed" from="HUD" to="." method="_on_hud_restart_pressed"]
