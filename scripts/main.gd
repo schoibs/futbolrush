@@ -22,6 +22,11 @@ enum GameState { START, PLAYING, GAME_OVER }
 @export var sprinter_speed_bonus := 120.0
 @export var goal_y := 45.0
 
+@export_group("Moving Goal")
+@export var goal_move_speed := 80.0
+@export var goal_half_width := 110.0
+@export var goal_horizontal_margin := 24.0
+
 @onready var goal = $Goal
 @onready var defender_container: Node2D = $DefenderContainer
 @onready var spawn_timer: Timer = $SpawnTimer
@@ -41,6 +46,7 @@ var player_start_position := Vector2.ZERO
 var score := 0
 var best_score := 0
 var elapsed_time := 0.0
+var goal_move_direction := 1.0
 
 func _ready() -> void:
 	randomize()
@@ -73,6 +79,7 @@ func _process(delta: float) -> void:
 		return
 
 	elapsed_time += delta
+	update_goal_motion(delta)
 
 func enter_start_state() -> void:
 	game_state = GameState.START
@@ -216,6 +223,21 @@ func score_goal() -> void:
 
 	score += 1
 	hud.set_score(score)
+
+func update_goal_motion(delta: float) -> void:
+	var viewport_width := get_viewport_rect().size.x
+	var min_goal_x := goal_half_width + goal_horizontal_margin
+	var max_goal_x := viewport_width - goal_half_width - goal_horizontal_margin
+
+	goal.position.y = goal_y
+	goal.position.x += goal_move_direction * goal_move_speed * delta
+
+	if goal.position.x >= max_goal_x:
+		goal.position.x = max_goal_x
+		goal_move_direction = -1.0
+	elif goal.position.x <= min_goal_x:
+		goal.position.x = min_goal_x
+		goal_move_direction = 1.0
 
 func _on_spawn_timer_timeout() -> void:
 	if game_state != GameState.PLAYING:
