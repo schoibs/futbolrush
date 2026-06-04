@@ -26,7 +26,7 @@ enum GameState { START, PLAYING, GAME_OVER }
 @onready var defender_container: Node2D = $DefenderContainer
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var score_timer: Timer = $ScoreTimer
-@onready var player: Area2D = $Player
+@onready var player = $Player
 @onready var hud = $HUD
 @onready var ball = $Ball
 
@@ -63,6 +63,9 @@ func _ready() -> void:
 		
 	if not goal.ball_entered.is_connected(_on_goal_ball_entered):
 		goal.ball_entered.connect(_on_goal_ball_entered)
+		
+	if not player.shoot_requested.is_connected(_on_player_shoot_requested):
+		player.shoot_requested.connect(_on_player_shoot_requested)
 
 	enter_start_state()
 
@@ -74,6 +77,8 @@ func enter_start_state() -> void:
 	clear_defenders()
 	reset_player()
 	ball.reset_to_ready()
+	player.reset_aim()
+	player.set_aim_active(false)
 	player.set_physics_process(false)
 	hud.show_start(best_score)
 
@@ -83,6 +88,8 @@ func start_run() -> void:
 	clear_defenders()
 	reset_player()
 	ball.reset_to_ready()
+	player.reset_aim()
+	player.set_aim_active(true)
 	player.set_physics_process(true)
 	hud.show_playing(score)
 	start_spawn_timer()
@@ -99,6 +106,7 @@ func enter_game_over_state() -> void:
 	spawn_timer.stop()
 	score_timer.stop()
 	player.set_physics_process(false)
+	player.set_aim_active(false)
 	ball.reset_to_ready()
 	hud.play_collision_feedback()
 	clear_defenders()
@@ -232,16 +240,21 @@ func _on_goal_ball_entered(ball_area: Area2D) -> void:
 func _on_defender_hit_player() -> void:
 	enter_game_over_state()
 
+func _on_player_shoot_requested(direction: Vector2) -> void:
+	if game_state != GameState.PLAYING:
+		return
+
+	if not ball.has_method("is_ready"):
+		return
+
+	if not ball.is_ready():
+		return
+
+	ball.launch(direction)
+
 func _on_hud_play_pressed() -> void:
 	start_run()
 
 func _on_hud_restart_pressed() -> void:
 	start_run()
 	
-func _unhandled_input(event: InputEvent) -> void:
-#	TODO: temp handler for debugging goal event
-	if game_state != GameState.PLAYING:
-		return
-		
-	if event.is_action_pressed("debug_launch_ball"):
-		ball.launch(Vector2.UP)
